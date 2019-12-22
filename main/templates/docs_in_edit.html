@@ -14,12 +14,13 @@ th, td {
 <body>
 <h1>Приходная накладная (редактирование)</h1>
 
-<form>
-    Номер накладной:
-    <input type="text" name="doc_number">
-    Дата оформления:
-    <input type="text" name="date_created">
-    <input type="submit" value="Сформировать">
+<form action="{% url 'main:docs_in_edit' document.pk %}" method="post">
+    {% csrf_token %}
+    <div>{{ form.doc_number.label }}</div>
+    <div>{{ form.doc_number }}</div>
+    <div>{{ form.description.label }}</div>
+    <div>{{ form.description }}</div>
+    <input type="submit" value="Сохранить">
 </form>
 <br>
 <h3>Добавить товары:</h3>

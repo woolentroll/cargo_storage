@@ -22,12 +22,16 @@ th, td {
     <input type="submit" value="Поиск">
 </form>
 <br>
-<h3><a href="{% url 'main:docs_in_create' %}">Добавить новую</a></h3>
+
+<form action="{% url 'main:docs_in_create' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Создать новую накладную">
+</form>
+<br>
 
 
 <table style="width:100%">
   <tr>
-    <th>PK</th>
     <th>Номер</th>
     <th>Дата</th>
     <th>Описание</th>
@@ -35,7 +39,6 @@ th, td {
   </tr>
     {% for document in documents %}
         <tr>
-            <td>{{document.pk}}</td>
             <td>{{document.doc_number}}</td>
             <td>{{document.date_created}}</td>
             <td>{{document.description}}</td>
