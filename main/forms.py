@@ -17,3 +17,21 @@ class DocumentForm(forms.Form):
                 "placeholder": "Leave a description!"
             })
     )
+
+
+class ItemForm(forms.Form):
+    name = forms.CharField(
+        label="Название груза",
+        max_length=60,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Введите название груза"
+        })
+    )
+    description = forms.CharField(
+        label="Описание",
+        max_length=200,
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Введите описание"
+            })
+    )

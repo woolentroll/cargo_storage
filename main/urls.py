@@ -11,6 +11,7 @@ urlpatterns = [
     path("docs/in/", views.docs_in, name="docs_in"),
     path("docs/out/", views.docs_out, name="docs_out"),
     path("docs/in/create/", views.docs_in_create, name="docs_in_create"),
+    path("docs/in/<int:document_id>/add_item", views.docs_in_add_item, name="docs_in_add_item"),
     path("docs/in/<int:document_id>/", views.docs_in_edit, name="docs_in_edit"),
     path("docs/out/edit/", views.docs_out_edit, name="docs_out_edit"),
 ]

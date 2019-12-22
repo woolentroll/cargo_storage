@@ -32,6 +32,7 @@ class Document(models.Model):
 class Item(models.Model):
     date_created = models.DateTimeField('date created', default=datetime.now)
     description = models.CharField(max_length=200)
+    name = models.CharField(max_length=60)
 
     def __str__(self):
         return "Item {}, created: {}, description: {}".format(self.pk, self.date_created, self.description)

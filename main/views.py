@@ -4,8 +4,8 @@ from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse
 
-from main.forms import DocumentForm
-from main.models import Operation, Document
+from main.forms import DocumentForm, ItemForm
+from main.models import Operation, Document, ItemEntry, Item
 
 
 def login(request):
@@ -88,11 +88,12 @@ def docs_in_edit(request, document_id):
 
     result = []
     for e in document.operation.entries.all():
-        result.append({'description': e.item.description})
+        result.append({'name': e.item.name})
     context = {
         "items": result,
         "document": document,
-        "form": form
+        "form_doc": form,
+        "form_item": ItemForm()
     }
 
     return render(request, "docs_in_edit.html", context)
@@ -106,3 +107,24 @@ def docs_out_edit(request):
     return render(request, "docs_out_edit.html", context)
 
 
+def docs_in_add_item(request, document_id):
+    document = Document.objects.get(pk=document_id)
+
+    if request.method == "POST":
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            # найдем такой же груз
+            items = Item.objects.filter(name=form.cleaned_data["name"])
+            if items.exists():
+                # пока берем первый, но вообще единица должна быть уникальной
+                item = items.first()
+            else:
+                item = Item(name=form.cleaned_data["name"])
+                item.save()
+            entry = ItemEntry(
+                description=form.cleaned_data["description"],
+                item=item,
+                operation=document.operation
+            )
+            entry.save()
+    return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))

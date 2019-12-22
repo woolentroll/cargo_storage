@@ -16,17 +16,20 @@ th, td {
 
 <form action="{% url 'main:docs_in_edit' document.pk %}" method="post">
     {% csrf_token %}
-    <div>{{ form.doc_number.label }}</div>
-    <div>{{ form.doc_number }}</div>
-    <div>{{ form.description.label }}</div>
-    <div>{{ form.description }}</div>
+    <div>{{ form_doc.doc_number.label }}:</div>
+    <div>{{ form_doc.doc_number }}</div>
+    <div>{{ form_doc.description.label }}:</div>
+    <div>{{ form_doc.description }}</div>
     <input type="submit" value="Сохранить">
 </form>
 <br>
 <h3>Добавить товары:</h3>
-<form>
-    Наименование:
-    <input type="text" name="doc_number">
+<form action="{% url 'main:docs_in_add_item' document.pk %}" method="post">
+    {% csrf_token %}
+    <div>{{ form_item.name.label }}:</div>
+    <div>{{ form_item.name }}</div>
+    <div>{{ form_item.description.label }}:</div>
+    <div>{{ form_item.description }}</div>
     <input type="submit" value="Добавить">
 </form>
 <br>
@@ -38,7 +41,7 @@ th, td {
   </tr>
     {% for i in items %}
     <tr>
-        <td>{{ i.description }}</td>
+        <td>{{ i.name }}</td>
         <td><a href="">Удалить</a></td>
     </tr>
     {% endfor %}
