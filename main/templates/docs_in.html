@@ -22,7 +22,7 @@ th, td {
     <input type="submit" value="Поиск">
 </form>
 <br>
-<h3><a href="{% url 'test_cargo_docs_in_create' %}">Добавить новую</a></h3>
+<h3><a href="{% url 'main:docs_in_create' %}">Добавить новую</a></h3>
 
 
 <table style="width:100%">
@@ -40,12 +40,12 @@ th, td {
             <td>{{document.date_created}}</td>
             <td>{{document.description}}</td>
             <td>
-                <a href="">Распечатать</a> <a href="{% url 'test_cargo_docs_in_edit' document.pk %}">Редактировать</a>
+                <a href="">Распечатать</a> <a href="{% url 'main:docs_in_edit' document.pk %}">Редактировать</a>
             </td>
         </tr>
 {% endfor %}
 </table>
 
-<h3><a href="{% url 'test_cargo_docs' %}">Назад</a></h3>
-<h3><a href="{% url 'test_cargo_index' %}">В главное меню</a></h3>
+<h3><a href="{% url 'main:docs' %}">Назад</a></h3>
+<h3><a href="{% url 'main:index' %}">В главное меню</a></h3>
 </body>
