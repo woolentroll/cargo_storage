@@ -1,0 +1,9 @@
+<h1>Введите логин и пароль:</h1>
+<form action="{% url 'test_cargo_index' %}" method="POST">
+    {% csrf_token %}
+    Логин:<br>
+    <input type="text" name="doc_number">
+    Пароль:<br>
+    <input type="text" name="date_created"><br>
+    <input type="submit" value="Подтвердтить">
+</form>

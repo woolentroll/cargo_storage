@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+</head>
+<body>
+<h1>Приходные накладные</h1>
+
+<form>
+    Номер накладной:
+    <input type="text" name="doc_number">
+    Дата оформления:
+    <input type="text" name="date_created">
+    <input type="submit" value="Поиск">
+</form>
+<br>
+<h3><a href="{% url 'test_cargo_docs_in_create' %}">Добавить новую</a></h3>
+
+
+<table style="width:100%">
+  <tr>
+    <th>PK</th>
+    <th>Номер</th>
+    <th>Дата</th>
+    <th>Описание</th>
+    <th></th>
+  </tr>
+    {% for document in documents %}
+        <tr>
+            <td>{{document.pk}}</td>
+            <td>{{document.doc_number}}</td>
+            <td>{{document.date_created}}</td>
+            <td>{{document.description}}</td>
+            <td>
+                <a href="">Распечатать</a> <a href="{% url 'test_cargo_docs_in_edit' document.pk %}">Редактировать</a>
+            </td>
+        </tr>
+{% endfor %}
+</table>
+
+<h3><a href="{% url 'test_cargo_docs' %}">Назад</a></h3>
+<h3><a href="{% url 'test_cargo_index' %}">В главное меню</a></h3>
+</body>

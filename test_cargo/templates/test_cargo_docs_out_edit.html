@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+</head>
+<body>
+<h1>Расходная накладная (редактирование)</h1>
+
+<form>
+    Номер накладной:
+    <input type="text" name="doc_number">
+    Дата оформления:
+    <input type="text" name="date_created">
+    <input type="submit" value="Сформировать">
+</form>
+<br>
+<h3>Добавить товары:</h3>
+<form>
+    Наименование:
+    <input type="text" name="doc_number" placeholder="труба железная">
+    <input type="submit" value="Поиск">
+</form>
+<br>
+
+<table style="width:100%">
+  <tr>
+    <th>ID</th>
+    <th>Наименование</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Труба железная</td>
+    <td><a href="">Добавить</a></td>
+  </tr>
+  <tr>
+      <td>2</td>
+      <td>Труба железная</td>
+      <td><a href="">Добавить</a></td>
+  </tr>
+</table>
+<h3><a href="{% url 'test_cargo_docs_out' %}">Назад</a></h3>
+<h3><a href="{% url 'test_cargo_index' %}">В главное меню</a></h3>
+</body>

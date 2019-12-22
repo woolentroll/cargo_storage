@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+</head>
+<body>
+<h1>Отчеты</h1>
+
+<form>
+  Наименование:
+    <input type="text" name="item_name">
+    <input type="submit" value="Поиск">
+</form>
+<br>
+
+<table style="width:100%">
+  <tr>
+    <th>ID</th>
+    <th>Наименование</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Труба железная</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Труба железная</td>
+  </tr>
+</table>
+<h3><a href="{% url 'test_cargo_index' %}">В главное меню</a></h3>
+</body>
