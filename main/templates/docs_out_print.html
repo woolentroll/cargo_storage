@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+</head>
+<body>
+
+<p>Организация ООО "Склад"</p>
+<p>ИНН 1234567890123</p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div align="center">
+    <h2>Расходная накладная № {{ doc_number }}</h2>
+    <h3>от {{ date_created }}</h3>
+</div>
+<br>
+
+<table style="width:100%">
+  <tr>
+    <th>Наименование </th>
+  </tr>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div align="right">
+    <p>Принял___________________________________________</p>
+    <br>
+    <p>Сдал_____________________________________________</p>
+</div>
+
+
+
+</body>

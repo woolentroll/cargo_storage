@@ -8,12 +8,16 @@ urlpatterns = [
     path("list/", views.list, name="items_list"),
     path("docs/", views.docs, name="docs"),
     path("reports/", views.reports, name="reports"),
+
     path("docs/in/", views.docs_in, name="docs_in"),
-    path("docs/out/", views.docs_out, name="docs_out"),
     path("docs/in/create/", views.docs_in_create, name="docs_in_create"),
     path("docs/in/<int:item_id>/del_item", views.docs_in_del_item, name="docs_in_del_item"),
     path("docs/in/<int:document_id>/add_item", views.docs_in_add_item, name="docs_in_add_item"),
     path("docs/in/<int:document_id>/", views.docs_in_edit, name="docs_in_edit"),
-    path("docs/out/edit/", views.docs_out_edit, name="docs_out_edit"),
-    path("docs/print/<int:document_id>/", views.docs_in_print, name="docs_in_print"),
+    path("docs/in/print/<int:document_id>/", views.docs_in_print, name="docs_in_print"),
+
+    path("docs/out/", views.docs_out, name="docs_out"),
+    path("docs/out/create/", views.docs_out_create, name="docs_out_create"),
+    path("docs/out/<int:document_id>/", views.docs_out_edit, name="docs_out_edit"),
+    path("docs/out/print/<int:document_id>/", views.docs_out_print, name="docs_out_print"),
 ]

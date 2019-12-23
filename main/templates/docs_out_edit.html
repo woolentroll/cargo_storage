@@ -14,38 +14,32 @@ th, td {
 <body>
 <h1>Расходная накладная (редактирование)</h1>
 
-<form>
-    Номер накладной:
-    <input type="text" name="doc_number">
-    Дата оформления:
-    <input type="text" name="date_created">
-    <input type="submit" value="Сформировать">
-</form>
-<br>
-<h3>Добавить товары:</h3>
-<form>
-    Наименование:
-    <input type="text" name="doc_number" placeholder="труба железная">
-    <input type="submit" value="Поиск">
+<form action="{% url 'main:docs_out_edit' document.pk %}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form_doc.as_table }}
+    </table>
+    <input type="submit" value="Записать">
 </form>
 <br>
 
 <table style="width:100%">
   <tr>
-    <th>ID</th>
     <th>Наименование</th>
+    <th>Заводской номер</th>
+    <th>Номер паспорта</th>
+    <th>Вес</th>
     <th></th>
   </tr>
-  <tr>
-    <td>1</td>
-    <td>Труба железная</td>
-    <td><a href="">Добавить</a></td>
-  </tr>
-  <tr>
-      <td>2</td>
-      <td>Труба железная</td>
-      <td><a href="">Добавить</a></td>
-  </tr>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.factory_number }}</td>
+        <td>{{ item.passport_number }}</td>
+        <td>{{ item.weight }}</td>
+        <td><a href="{% url 'main:docs_out_del_item' item.pk %}">Удалить</a></td>
+    </tr>
+    {% endfor %}
 </table>
 <h3><a href="{% url 'main:docs_out' %}">Назад</a></h3>
 <h3><a href="{% url 'main:index' %}">В главное меню</a></h3>
