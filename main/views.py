@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse
@@ -69,7 +69,7 @@ def docs_in_create(request):
 
 def docs_in_edit(request, document_id):
     """Хендлер кнопки Документы-Приходная накладная - Добавить/Изменить"""
-    document = Document.objects.get(pk=document_id)
+    document = get_object_or_404(Document, pk=document_id, doc_type=0)
 
     if request.method == "POST":
         form = DocumentForm(request.POST)
@@ -84,7 +84,7 @@ def docs_in_edit(request, document_id):
     result = []
     for e in document.operation.entries.all():
         result.append({
-            'pk': e.item.pk,
+            'pk': e.pk,
             'name': e.item.name,
             'factory_number': e.item.factory_number,
             'passport_number': e.item.passport_number,
@@ -101,13 +101,13 @@ def docs_in_edit(request, document_id):
 
 
 def docs_in_add_item(request, document_id):
-    document = Document.objects.get(pk=document_id)
+    document = get_object_or_404(Document, pk=document_id, doc_type=0)
 
     if request.method == "POST":
         form = ItemForm(request.POST)
         if form.is_valid():
             # найдем такой же груз
-            items = Item.objects.filter(name=form.cleaned_data["name"])
+            items = Item.objects.filter(factory_number=form.cleaned_data["factory_number"])
             if items.exists():
                 # пока берем первый, но вообще единица должна быть уникальной
                 item = items.first()
@@ -129,14 +129,14 @@ def docs_in_add_item(request, document_id):
 
 
 def docs_in_del_item(request, item_id):
-    entry = ItemEntry.objects.get(pk=item_id)
+    entry = get_object_or_404(ItemEntry, pk=item_id, operation__operation_type=0)
     document = entry.operation.documents.first()
     entry.delete()
     return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
 
 
 def docs_in_print(request, document_id):
-    document = Document.objects.get(pk=document_id)
+    document = get_object_or_404(Document, pk=document_id, doc_type=0)
 
     result = []
     for e in document.operation.entries.all():
@@ -170,9 +170,9 @@ def docs_out_create(request):
     return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk,)))
 
 
-def docs_out_edit(request, document_id):
+def docs_out_edit(request, document_id, **kwargs):
     """Хендлер кнопки Документы-Расходная накладная - Добавить/Изменить"""
-    document = Document.objects.get(pk=document_id)
+    document = get_object_or_404(Document, pk=document_id, doc_type=1)
 
     if request.method == "POST":
         form = DocumentForm(request.POST)
@@ -187,7 +187,7 @@ def docs_out_edit(request, document_id):
     result = []
     for e in document.operation.entries.all():
         result.append({
-            'pk': e.item.pk,
+            'pk': e.pk,
             'name': e.item.name,
             'factory_number': e.item.factory_number,
             'passport_number': e.item.passport_number,
@@ -197,14 +197,14 @@ def docs_out_edit(request, document_id):
         "items": result,
         "document": document,
         "form_doc": form,
-        "form_item": ItemForm()
+        "error_message": kwargs.get('error_message'),
     }
 
     return render(request, "docs_out_edit.html", context)
 
 
 def docs_out_print(request, document_id):
-    document = Document.objects.get(pk=document_id)
+    document = get_object_or_404(Document, pk=document_id, doc_type=1)
 
     result = []
     for e in document.operation.entries.all():
@@ -215,3 +215,27 @@ def docs_out_print(request, document_id):
         "items": result,
     }
     return render(request, "docs_out_print.html", context)
+
+
+def docs_out_add_item(request, document_id):
+    document = get_object_or_404(Document, pk=document_id, doc_type=1)
+
+    if request.method == "POST":
+        # найдем такой же груз
+        item = Item.objects.filter(factory_number=request.POST["factory_number"])
+        if item.exists():
+            item = item.first()
+            # проверяем, что последней проводкой был приход
+            entries = item.entries.values('pk', 'date_created', 'operation__operation_type').order_by('date_created')
+            if entries.exists() and entries.last()['operation__operation_type'] == 0:
+                entry = ItemEntry(item=item, operation=document.operation)
+                entry.save()
+
+    return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk, )))
+
+
+def docs_out_del_item(request, item_id):
+    entry = get_object_or_404(ItemEntry, pk=item_id, operation__operation_type=1)
+    document = entry.operation.documents.first()
+    entry.delete()
+    return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk,)))

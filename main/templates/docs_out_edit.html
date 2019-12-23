@@ -22,6 +22,14 @@ th, td {
     <input type="submit" value="Записать">
 </form>
 <br>
+<h3>Добавить товары:</h3>
+<form action="{% url 'main:docs_out_add_item' document.pk %}" method="post">
+{% csrf_token %}
+    <label for="id_factory_number">Заводской номер:</label>
+    <input type="text" name="factory_number" placeholder="Введите заводской номер" maxlength="60" required id="id_factory_number">
+<input type="submit" value="Добавить">
+</form>
+<br>
 
 <table style="width:100%">
   <tr>
