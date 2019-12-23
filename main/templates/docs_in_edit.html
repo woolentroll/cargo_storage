@@ -16,32 +16,36 @@ th, td {
 
 <form action="{% url 'main:docs_in_edit' document.pk %}" method="post">
     {% csrf_token %}
-    <div>{{ form_doc.doc_number.label }}:</div>
-    <div>{{ form_doc.doc_number }}</div>
-    <div>{{ form_doc.description.label }}:</div>
-    <div>{{ form_doc.description }}</div>
+    <table>
+        {{ form_doc.as_table }}
+    </table>
     <input type="submit" value="Записать">
 </form>
 <br>
 <h3>Добавить товары:</h3>
 <form action="{% url 'main:docs_in_add_item' document.pk %}" method="post">
     {% csrf_token %}
-    <div>{{ form_item.name.label }}:</div>
-    <div>{{ form_item.name }}</div>
-    <div>{{ form_item.description.label }}:</div>
-    <div>{{ form_item.description }}</div>
+    <table>
+        {{ form_item.as_table }}
+    </table>
     <input type="submit" value="Добавить">
 </form>
 <br>
 
 <table style="width:100%">
   <tr>
-    <th>Описание</th>
+    <th>Наименование</th>
+    <th>Заводской номер</th>
+    <th>Номер паспорта</th>
+    <th>Вес</th>
     <th></th>
   </tr>
     {% for item in items %}
     <tr>
         <td>{{ item.name }}</td>
+        <td>{{ item.factory_number }}</td>
+        <td>{{ item.passport_number }}</td>
+        <td>{{ item.weight }}</td>
         <td><a href="{% url 'main:docs_in_del_item' item.pk %}">Удалить</a></td>
     </tr>
     {% endfor %}

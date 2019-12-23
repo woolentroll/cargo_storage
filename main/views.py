@@ -89,7 +89,13 @@ def docs_in_edit(request, document_id):
 
     result = []
     for e in document.operation.entries.all():
-        result.append({'pk': e.item.pk, 'name': e.item.name})
+        result.append({
+            'pk': e.item.pk,
+            'name': e.item.name,
+            'factory_number': e.item.factory_number,
+            'passport_number': e.item.passport_number,
+            'weight': e.item.weight,
+        })
     context = {
         "items": result,
         "document": document,
@@ -120,7 +126,12 @@ def docs_in_add_item(request, document_id):
                 # пока берем первый, но вообще единица должна быть уникальной
                 item = items.first()
             else:
-                item = Item(name=form.cleaned_data["name"])
+                item = Item(
+                    name=form.cleaned_data["name"],
+                    factory_number=form.cleaned_data["factory_number"],
+                    passport_number=form.cleaned_data["passport_number"],
+                    weight=form.cleaned_data["weight"],
+                )
                 item.save()
             entry = ItemEntry(
                 description=form.cleaned_data["description"],

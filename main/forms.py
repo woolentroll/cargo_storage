@@ -27,6 +27,26 @@ class ItemForm(forms.Form):
             "placeholder": "Введите название груза"
         })
     )
+    factory_number = forms.CharField(
+        label="Заводской номер",
+        max_length=60,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Введите заводской номер"
+        })
+    )
+    passport_number = forms.CharField(
+        label="Номер паспорта",
+        max_length=60,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Введите номер паспорта"
+        })
+    )
+    weight = forms.IntegerField(
+        label="Вес",
+        widget=forms.NumberInput(attrs={
+            "placeholder": "0"
+        })
+    )
     description = forms.CharField(
         label="Описание",
         max_length=200,
