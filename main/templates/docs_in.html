@@ -43,7 +43,7 @@ th, td {
             <td>{{document.date_created}}</td>
             <td>{{document.description}}</td>
             <td>
-                <a href="{% url 'main:docs_in_print' document.pk %}">Распечатать</a>
+                <a href="{% url 'main:docs_in_print' document.pk %}" target="_blank">Распечатать</a>
                 <a href="{% url 'main:docs_in_edit' document.pk %}">Редактировать</a>
             </td>
         </tr>
