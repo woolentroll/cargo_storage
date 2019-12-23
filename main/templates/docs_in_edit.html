@@ -20,7 +20,7 @@ th, td {
     <div>{{ form_doc.doc_number }}</div>
     <div>{{ form_doc.description.label }}:</div>
     <div>{{ form_doc.description }}</div>
-    <input type="submit" value="Сохранить">
+    <input type="submit" value="Записать">
 </form>
 <br>
 <h3>Добавить товары:</h3>
@@ -39,10 +39,10 @@ th, td {
     <th>Описание</th>
     <th></th>
   </tr>
-    {% for i in items %}
+    {% for item in items %}
     <tr>
-        <td>{{ i.name }}</td>
-        <td><a href="">Удалить</a></td>
+        <td>{{ item.name }}</td>
+        <td><a href="{% url 'main:docs_in_del_item' item.pk %}">Удалить</a></td>
     </tr>
     {% endfor %}
 </table>

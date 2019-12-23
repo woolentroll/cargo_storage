@@ -48,7 +48,8 @@ def reports(request):
 
 def docs_in(request):
     """Хендлер кнопки Документы-Приходная накладная"""
-    documents = Document.objects.all().values('pk', 'doc_number', 'date_created', 'description')
+    documents = Document.objects.filter(
+        doc_number__isnull=False).exclude(doc_number='').values('pk', 'doc_number', 'date_created', 'description')
     context = {
         "documents": documents,
     }
@@ -88,7 +89,7 @@ def docs_in_edit(request, document_id):
 
     result = []
     for e in document.operation.entries.all():
-        result.append({'name': e.item.name})
+        result.append({'pk': e.item.pk, 'name': e.item.name})
     context = {
         "items": result,
         "document": document,
@@ -128,3 +129,24 @@ def docs_in_add_item(request, document_id):
             )
             entry.save()
     return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
+
+
+def docs_in_del_item(request, item_id):
+    entry = ItemEntry.objects.get(pk=item_id)
+    document = entry.operation.documents.first()
+    entry.delete()
+    return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
+
+
+def docs_in_print(request, document_id):
+    document = Document.objects.get(pk=document_id)
+
+    result = []
+    for e in document.operation.entries.all():
+        result.append({'name': e.item.name})
+    context = {
+        "doc_number": document.doc_number,
+        "date_created": document.date_created,
+        "items": result,
+    }
+    return render(request, "docs_in_print.html", context)

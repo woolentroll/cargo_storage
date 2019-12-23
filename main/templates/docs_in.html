@@ -25,7 +25,7 @@ th, td {
 
 <form action="{% url 'main:docs_in_create' %}" method="post">
     {% csrf_token %}
-    <input type="submit" value="Создать новую накладную">
+    <input type="submit" value="Добавить новую">
 </form>
 <br>
 
@@ -43,7 +43,8 @@ th, td {
             <td>{{document.date_created}}</td>
             <td>{{document.description}}</td>
             <td>
-                <a href="">Распечатать</a> <a href="{% url 'main:docs_in_edit' document.pk %}">Редактировать</a>
+                <a href="{% url 'main:docs_in_print' document.pk %}">Распечатать</a>
+                <a href="{% url 'main:docs_in_edit' document.pk %}">Редактировать</a>
             </td>
         </tr>
 {% endfor %}
