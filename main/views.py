@@ -36,6 +36,9 @@ def docs_in(request):
         doc_number__isnull=False,
         doc_type=0
     ).exclude(doc_number='').values('pk', 'doc_number', 'date_created', 'description')
+    doc_number = request.GET.get('doc_number')
+    if doc_number:
+        documents = documents.filter(doc_number=doc_number)
     context = {
         "documents": documents,
     }
@@ -139,6 +142,9 @@ def docs_out(request):
         doc_number__isnull=False,
         doc_type=1
     ).exclude(doc_number='').values('pk', 'doc_number', 'date_created', 'description')
+    doc_number = request.GET.get('doc_number')
+    if doc_number:
+        documents = documents.filter(doc_number=doc_number)
     context = {
         "documents": documents,
     }
