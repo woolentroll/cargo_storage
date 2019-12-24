@@ -12,28 +12,45 @@ th, td {
 </style>
 </head>
 <body>
-<h1>Отчеты</h1>
+<h1>Отчет по грузам</h1>
 
 <form>
-  Наименование:
-    <input type="text" name="item_name">
+    <label for="id_item_name">Наименование:</label>
+    <input type="text" name="item_name" id="id_item_name">
+    <label for="id_factory_number">Заводской номер:</label>
+    <input type="text" name="factory_number" id="id_factory_number">
+    <label for="id_status">Статус хранения:</label>
+    <input type="text" name="status" id="id_status">
     <input type="submit" value="Поиск">
 </form>
 <br>
 
+<p>Всего {{ total }} записей:</p>
 <table style="width:100%">
   <tr>
-    <th>ID</th>
     <th>Наименование</th>
+    <th>Заводской номер</th>
+    <th>Номер паспорта</th>
+    <th>Вес</th>
+    <th>Статус</th>
+    <th>Дата прибытия</th>
+    <th>Номер приходной накладной</th>
+    <th>Дата отбытия</th>
+    <th>Номер расходной накладной</th>
   </tr>
-  <tr>
-    <td>1</td>
-    <td>Труба железная</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>Труба железная</td>
-  </tr>
+    {% for r in records %}
+    <tr>
+        <td>{{ r.name }}</td>
+        <td>{{ r.factory_number }}</td>
+        <td>{{ r.passport_number }}</td>
+        <td>{{ r.weight }}</td>
+        <td>{{ r.current_status }}</td>
+        <td>{{ r.date_arrival }}</td>
+        <td>{{ r.entry_in }}</td>
+        <td>{{ r.date_departure }}</td>
+        <td>{{ r.entry_out }}</td>
+    </tr>
+    {% endfor %}
 </table>
 <h3><a href="{% url 'main:index' %}">В главное меню</a></h3>
 </body>

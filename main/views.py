@@ -22,28 +22,12 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def list(request):
-    """Хендлер кнопки Грузы"""
-    context = {
-        "nipa": 123,
-    }
-    return render(request, "list.html", context)
-
-
 def docs(request):
     """Хендлер кнопки Документы"""
     context = {
         "nipa": 123,
     }
     return render(request, "docs.html", context)
-
-
-def reports(request):
-    """Хендлер кнопки Отчеты"""
-    context = {
-        "nipa": 123,
-    }
-    return render(request, "reports.html", context)
 
 
 def docs_in(request):
@@ -239,3 +223,44 @@ def docs_out_del_item(request, item_id):
     document = entry.operation.documents.first()
     entry.delete()
     return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk,)))
+
+
+def get_items_report(request):
+    item_name = request.GET.get('item_name')
+    factory_number = request.GET.get('factory_number')
+    status = request.GET.get('status')
+
+    queryset = Item.objects.all()
+    if item_name:
+        queryset = queryset.filter(name__contains=item_name)
+    if factory_number:
+        queryset = queryset.filter(factory_number=factory_number)
+
+    result = []
+    for item in queryset:
+        data = {
+            'name': item.name,
+            'factory_number': item.factory_number,
+            'passport_number': item.passport_number,
+            'weight': item.weight
+        }
+        # находим статус груза
+        if item.entries.exists():
+            last_entry = item.entries.last()
+            if last_entry.operation.operation_type == 0:
+                data['current_status'] = "На хранении"
+                data['date_arrival'] = last_entry.date_created
+                data['date_departure'] = ""
+                data['entry_in'] = last_entry.operation.documents.last().doc_number
+                data['entry_out'] = ""
+            else:
+                data['current_status'] = "Отгружен"
+                last_arrival = item.entries.filter(operation__operation_type=0).order_by('date_created').last()
+                data['date_arrival'] = last_arrival.date_created if last_arrival else item.date_created
+                data['date_departure'] = last_entry.date_created
+                data['entry_in'] = last_arrival.operation.documents.last().doc_number
+                data['entry_out'] = last_entry.operation.documents.last().doc_number
+        result.append(data)
+    if status:
+        result = [r for r in result if r['current_status'] == status]
+    return render(request, "reports.html", {'total': len(result), 'records': result})
