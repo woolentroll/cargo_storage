@@ -1,9 +1,17 @@
 <h1>Введите логин и пароль:</h1>
-<form action="{% url 'main:index' %}" method="POST">
+{% if invalid_login %}<p><strong>{{ invalid_login }}</strong></p>{% endif %}
+<form action="{% url 'main:login_view' %}" method="POST">
     {% csrf_token %}
-    Логин:<br>
-    <input type="text" name="doc_number">
-    Пароль:<br>
-    <input type="text" name="date_created"><br>
+    <table>
+        <tr>
+            <th><label for="id_username">Логин: </label></th>
+            <td><input id="id_username" type="text" name="username"></td>
+        </tr>
+        <tr>
+            <th><label for="id_password">Пароль: </label></th>
+            <td><input id="id_password" type="password" name="password"></td>
+        </tr>
+    </table>
+    <br>
     <input type="submit" value="Подтвердтить">
 </form>

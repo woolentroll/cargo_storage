@@ -1,5 +1,8 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import logout
 
 # Create your views here.
 from django.urls import reverse
@@ -8,28 +11,36 @@ from main.forms import DocumentForm, ItemForm
 from main.models import Operation, Document, ItemEntry, Item
 
 
-def login(request):
-    context = {
-        "nipa": 123,
-    }
-    return render(request, "login.html", context)
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('main:index'))
+        else:
+            return render(request, "login.html", {'invalid_login': "Введены неверные логин или пароль!"})
+    return render(request, "login.html", {})
 
 
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('main:login_view'))
+
+
+@login_required
 def index(request):
-    context = {
-        "nipa": 123,
-    }
-    return render(request, "index.html", context)
+    return render(request, "index.html", {})
 
 
+@login_required
 def docs(request):
     """Хендлер кнопки Документы"""
-    context = {
-        "nipa": 123,
-    }
-    return render(request, "docs.html", context)
+    return render(request, "docs.html", {})
 
 
+@login_required
 def docs_in(request):
     """Хендлер кнопки Документы-Приходная накладная"""
     documents = Document.objects.filter(
@@ -45,6 +56,7 @@ def docs_in(request):
     return render(request, "docs_in.html", context)
 
 
+@login_required
 def docs_in_create(request):
     operation = Operation(operation_type=0)
     operation.save()
@@ -54,6 +66,7 @@ def docs_in_create(request):
     return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
 
 
+@login_required
 def docs_in_edit(request, document_id):
     """Хендлер кнопки Документы-Приходная накладная - Добавить/Изменить"""
     document = get_object_or_404(Document, pk=document_id, doc_type=0)
@@ -87,6 +100,7 @@ def docs_in_edit(request, document_id):
     return render(request, "docs_in_edit.html", context)
 
 
+@login_required
 def docs_in_add_item(request, document_id):
     document = get_object_or_404(Document, pk=document_id, doc_type=0)
 
@@ -115,6 +129,7 @@ def docs_in_add_item(request, document_id):
     return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
 
 
+@login_required
 def docs_in_del_item(request, item_id):
     entry = get_object_or_404(ItemEntry, pk=item_id, operation__operation_type=0)
     document = entry.operation.documents.first()
@@ -122,6 +137,7 @@ def docs_in_del_item(request, item_id):
     return HttpResponseRedirect(reverse('main:docs_in_edit', args=(document.pk,)))
 
 
+@login_required
 def docs_in_print(request, document_id):
     document = get_object_or_404(Document, pk=document_id, doc_type=0)
 
@@ -136,6 +152,7 @@ def docs_in_print(request, document_id):
     return render(request, "docs_in_print.html", context)
 
 
+@login_required
 def docs_out(request):
     """Хендлер кнопки Документы-Расходная накладная"""
     documents = Document.objects.filter(
@@ -151,6 +168,7 @@ def docs_out(request):
     return render(request, "docs_out.html", context)
 
 
+@login_required
 def docs_out_create(request):
     operation = Operation(operation_type=1)
     operation.save()
@@ -160,6 +178,7 @@ def docs_out_create(request):
     return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk,)))
 
 
+@login_required
 def docs_out_edit(request, document_id, **kwargs):
     """Хендлер кнопки Документы-Расходная накладная - Добавить/Изменить"""
     document = get_object_or_404(Document, pk=document_id, doc_type=1)
@@ -193,6 +212,7 @@ def docs_out_edit(request, document_id, **kwargs):
     return render(request, "docs_out_edit.html", context)
 
 
+@login_required
 def docs_out_print(request, document_id):
     document = get_object_or_404(Document, pk=document_id, doc_type=1)
 
@@ -207,6 +227,7 @@ def docs_out_print(request, document_id):
     return render(request, "docs_out_print.html", context)
 
 
+@login_required
 def docs_out_add_item(request, document_id):
     document = get_object_or_404(Document, pk=document_id, doc_type=1)
 
@@ -224,6 +245,7 @@ def docs_out_add_item(request, document_id):
     return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk, )))
 
 
+@login_required
 def docs_out_del_item(request, item_id):
     entry = get_object_or_404(ItemEntry, pk=item_id, operation__operation_type=1)
     document = entry.operation.documents.first()
@@ -231,6 +253,7 @@ def docs_out_del_item(request, item_id):
     return HttpResponseRedirect(reverse('main:docs_out_edit', args=(document.pk,)))
 
 
+@login_required
 def get_items_report(request):
     item_name = request.GET.get('item_name')
     factory_number = request.GET.get('factory_number')
